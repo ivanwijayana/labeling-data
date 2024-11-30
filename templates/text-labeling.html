@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labeling Data Teks</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e0f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #00796b;
+        }
+        p {
+            color: #00796b;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 1rem;
+            color: #00796b;
+            display: block;
+            margin-bottom: 10px;
+        }
+        textarea, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #00796b;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #004d40;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            text-align: center;
+        }
+        .popup h2 {
+            margin: 0;
+            color: #00796b;
+        }
+        .popup button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .popup button:hover {
+            background-color: #004d40;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Program Labeling Data Teks</h1>
+        <p>Label: 1 = Judi, 0 = Non-Judi</p>
+        <form id="labelingForm" method="POST" action="/submit">
+            <label for="text">Masukkan teks:</label><br>
+            <textarea name="text" id="text" rows="4" cols="50" required></textarea><br><br>
+
+            <label for="label">Masukkan label (1 atau 0):</label><br>
+            <input type="number" name="label" id="label" min="0" max="1" required><br><br>
+
+            <input type="submit" value="Simpan Data">
+        </form>
+
+        <br>
+        <a href="{{ url_for('save') }}">Simpan Semua Data</a>
+    </div>
+
+    <!-- Pop-up Confirmation -->
+    <div id="thankYouPopup" class="popup">
+        <h2>Terimakasih!</h2>
+        <p>Data berhasil disimpan.</p>
+        <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <script>
+        // Pop-up fungsi
+        function openPopup() {
+            document.getElementById('thankYouPopup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('thankYouPopup').style.display = 'none';
+        }
+
+        // Form submit handler
+        document.getElementById('labelingForm').onsubmit = function(event) {
+            event.preventDefault(); // Mencegah halaman reload
+
+            // Simulasi submit dengan delay untuk animasi
+            setTimeout(function() {
+                openPopup(); // Menampilkan pop-up setelah submit
+            }, 300);
+
+            // Lakukan pengiriman data form ke server
+            fetch('/submit', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
+        };
+    </script>
+</body>
+</html>
